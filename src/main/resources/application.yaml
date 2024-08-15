@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: jarFactory
+
+  datasource:
+    url: jdbc:postgresql://postgres:5432/jar_factory
+    username: postgres
+    password: admin
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
