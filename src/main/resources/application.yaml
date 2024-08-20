@@ -3,7 +3,7 @@ spring:
     name: jarFactory
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/jar_factory
+    url: jdbc:postgresql://localhost:5439/jar_factory
     username: postgres
     password: admin
     driver-class-name: org.postgresql.Driver
