@@ -11,3 +11,7 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+max-factory-capacity:
+  L_jar: 35 000
+  M_jar: 35 000
+  S_jar: 35 000
