@@ -11,11 +11,11 @@ import java.util.jar.JarException;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/jars/order")
+@RequestMapping("/api/v1/jars")
 public class JarFactoryController {
     private final JarOrderService jarOrderService;
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
+    @PostMapping("/order")
     public UUID createNewJarsOrder(@RequestBody JarOrderRequestDto jarOrderRequestDto) throws JarException {
         return jarOrderService.addOrder(jarOrderRequestDto);
     }
