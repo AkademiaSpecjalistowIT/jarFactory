@@ -1,15 +1,16 @@
 package pl.akademiaspecjalistowit.jarfactory.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import pl.akademiaspecjalistowit.jarfactory.configuration.ApiProperties;
 import pl.akademiaspecjalistowit.jarfactory.configuration.EmbeddedPostgresConfiguration;
+import pl.akademiaspecjalistowit.jarfactory.exception.JarFactoryException;
 import pl.akademiaspecjalistowit.jarfactory.model.JarOrderEntity;
 import pl.akademiaspecjalistowit.jarfactory.model.JarOrderRequestDto;
 import pl.akademiaspecjalistowit.jarfactory.repository.JarOrderRepository;
@@ -19,28 +20,71 @@ import java.util.List;
 import java.util.jar.JarException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 @DataJpaTest
 @ExtendWith(EmbeddedPostgresConfiguration.EmbeddedPostgresExtension.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(classes = {EmbeddedPostgresConfiguration.class})
 @ActiveProfiles("test")
-//@SpringBootTest
 class JarOrderServiceTest {
     private final LocalDate CORRECT_DATE = LocalDate.of(2024, 9, 29);
     private final Integer CORRECT_QUANTITY_JARS = 100;
+    private final Integer INCORRECT_QUANTITY_JARS = -100;
     @Autowired
     private JarOrderService jarOrderService;
     @Autowired
     private JarOrderRepository jarOrderRepository;
+    @Autowired
+    private ApiProperties apiProperties;
 
     @Test
-    void schould_create_order_with_correct_input_date() throws JarException {
+    void should_create_order_with_correct_input_data() throws JarException {
         //given
-        //when
         jarOrderService.addOrder(new JarOrderRequestDto(CORRECT_DATE, CORRECT_QUANTITY_JARS, CORRECT_QUANTITY_JARS, CORRECT_QUANTITY_JARS));
+        //when
         List<JarOrderEntity> byDeliveryDate = jarOrderRepository.getByDeliveryDate(CORRECT_DATE);
         //then
         assertThat(byDeliveryDate.size()).isEqualTo(1);
     }
+
+    @Test
+    void should_throw_exception_with_empty_input_delivery_date() throws JarException {
+        //given
+        //when
+        Executable e = () -> jarOrderService.addOrder(new JarOrderRequestDto(null, CORRECT_QUANTITY_JARS, CORRECT_QUANTITY_JARS, CORRECT_QUANTITY_JARS));
+
+        //then
+        assertThrows(IllegalArgumentException.class, e);
+    }
+
+    @Test
+    void should_throw_exception_with_incorrect_input_quantity_any_jars() throws JarException {
+        //given
+        //when
+        Executable e = () -> jarOrderService.addOrder(new JarOrderRequestDto(CORRECT_DATE, CORRECT_QUANTITY_JARS, INCORRECT_QUANTITY_JARS, CORRECT_QUANTITY_JARS));
+
+        //then
+        assertThrows(IllegalArgumentException.class, e);
+    }
+
+    @Test
+    void should_throw_exception_when_input_quantity_any_jars_exceeds_than_max_capacity() throws JarException {
+        //given
+        //when
+        Executable e = () -> jarOrderService.addOrder(new JarOrderRequestDto(CORRECT_DATE, apiProperties.getS_jar()+1, CORRECT_QUANTITY_JARS, CORRECT_QUANTITY_JARS));
+        //then
+        assertThrows(JarFactoryException.class, e);
+    }
+    @Test
+    void should_throw_exception_when_total_quantity_exceeds_max_capacity_for_day() throws JarException {
+        //given
+        jarOrderService.addOrder(new JarOrderRequestDto(CORRECT_DATE, apiProperties.getS_jar(), CORRECT_QUANTITY_JARS, CORRECT_QUANTITY_JARS));
+        //when
+        Executable e = () -> jarOrderService.addOrder(new JarOrderRequestDto(CORRECT_DATE, 1, CORRECT_QUANTITY_JARS, CORRECT_QUANTITY_JARS));
+        //then
+        assertThrows(JarFactoryException.class, e);
+    }
+
 
 }

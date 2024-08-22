@@ -3,6 +3,7 @@ package pl.akademiaspecjalistowit.jarfactory.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.akademiaspecjalistowit.jarfactory.configuration.ApiProperties;
+import pl.akademiaspecjalistowit.jarfactory.exception.JarFactoryException;
 import pl.akademiaspecjalistowit.jarfactory.model.JarOrderEntity;
 import pl.akademiaspecjalistowit.jarfactory.model.JarOrderRequestDto;
 import pl.akademiaspecjalistowit.jarfactory.repository.JarOrderRepository;
@@ -38,23 +39,20 @@ public class JarOrderServiceImpl implements JarOrderService {
 
     private void checkMaxCapabilities(LocalDate deliveryDate, Integer smallJars, Integer mediumJars, Integer largeJars) throws JarException {
         List<JarOrderEntity> listOfRequiredQuantities = jarOrderRepository.getByDeliveryDate(deliveryDate);
-        if (listOfRequiredQuantities.isEmpty()) {
-            return;
-        }
+
         Map<String, Integer> listOfExistingQuantitiesForThisDate = getTotalAmountForDate(listOfRequiredQuantities);
 
-        Integer productionСapacitySmallJars = apiProperties.getS_jar() - smallJars
-                - listOfExistingQuantitiesForThisDate.get("smallJars");
+        Integer existingSmallJars = listOfExistingQuantitiesForThisDate.getOrDefault("smallJars", 0);
+        Integer existingMediumJars = listOfExistingQuantitiesForThisDate.getOrDefault("mediumJars", 0);
+        Integer existingLargeJars = listOfExistingQuantitiesForThisDate.getOrDefault("largeJars", 0);
 
-        Integer productionСapacityMediumJars = apiProperties.getM_jar() - mediumJars
-                - listOfExistingQuantitiesForThisDate.get("mediumJars");
-
-        Integer productionСapacityLargeJars = apiProperties.getL_jar() - largeJars
-                - listOfExistingQuantitiesForThisDate.get("largeJars");
+        Integer productionСapacitySmallJars = apiProperties.getS_jar() - smallJars - existingSmallJars;
+        Integer productionСapacityMediumJars = apiProperties.getM_jar() - mediumJars - existingMediumJars;
+        Integer productionСapacityLargeJars = apiProperties.getL_jar() - largeJars - existingLargeJars;
 
         StringBuilder textError = generateErrorMessage(productionСapacitySmallJars, productionСapacityMediumJars, productionСapacityLargeJars);
         if (textError.length() > 0) {
-            throw new JarException("Zamówienie przekraczajace zdolności produkcyjne" + System.lineSeparator() + textError);
+            throw new JarFactoryException("Zamówienie przekraczajace zdolności produkcyjne" + System.lineSeparator() + textError);
         }
     }
 
