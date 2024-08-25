@@ -25,7 +25,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateJarOrderRequest'
+              $ref: '#/components/schemas/JarOrderRequestDto'
       responses:
         '201':
           description: Order created successfully
@@ -57,7 +57,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateJarOrderRequest'
+              $ref: '#/components/schemas/JarOrderRequestDto'
       responses:
         '204':
           description: Order updated successfully, no content returned
@@ -70,7 +70,7 @@ paths:
 
 components:
   schemas:
-    CreateJarOrderRequest:
+    JarOrderRequestDto:
       type: object
       properties:
         deliveryDate:
@@ -87,33 +87,6 @@ components:
           type: integer
           example: 2
       required:
-        - deliveryDate
-        - smallJars
-        - mediumJars
-        - largeJars
-
-    UpdateJarOrderRequest:
-      type: object
-      properties:
-        orderId:
-          type: string
-          format: uuid
-          example: "123e4567-e89b-12d3-a456-426614174000"
-        deliveryDate:
-          type: string
-          format: date
-          example: "2024-08-10"
-        smallJars:
-          type: integer
-          example: 15
-        mediumJars:
-          type: integer
-          example: 8
-        largeJars:
-          type: integer
-          example: 3
-      required:
-        - orderId
         - deliveryDate
         - smallJars
         - mediumJars

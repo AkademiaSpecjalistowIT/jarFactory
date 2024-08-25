@@ -22,8 +22,8 @@ public class JarFactoryController {
         return jarOrderService.addOrder(jarOrderRequestDto);
     }
 
-    @PutMapping("/order")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/order")
     public ResponseEntity<String> updateJarOrder(@RequestBody JarOrderRequestDto jarOrderRequestDto) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("NOT_IMPLEMENTED");
     }
