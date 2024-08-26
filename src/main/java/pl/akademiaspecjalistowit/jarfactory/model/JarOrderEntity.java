@@ -23,19 +23,16 @@ public class JarOrderEntity {
 
     private UUID technicalId;
 
-    @NotNull(message = "Delivery date cannot be null")
+    @Column(nullable = false)
     private LocalDate deliveryDate;
 
-    @NotNull(message = "Small jars count cannot be null")
-    @Min(value = 0, message = "Small jars count must be a positive integer or zero")
+    @Column(nullable = false)
     private Integer smallJars;
 
-    @NotNull(message = "Medium jars count cannot be null")
-    @Min(value = 0, message = "Medium jars count must be a positive integer or zero")
+    @Column(nullable = false)
     private Integer mediumJars;
 
-    @NotNull(message = "Large jars count cannot be null")
-    @Min(value = 0, message = "Large jars count must be a positive integer or zero")
+    @Column(nullable = false)
     private Integer largeJars;
 
     public JarOrderEntity(LocalDate deliveryDate, Integer smallJars, Integer mediumJars, Integer largeJars) {

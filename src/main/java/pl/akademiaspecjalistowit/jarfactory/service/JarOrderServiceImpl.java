@@ -2,6 +2,8 @@ package pl.akademiaspecjalistowit.jarfactory.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import pl.akademiaspecjalistowit.jarfactory.configuration.ApiProperties;
 import pl.akademiaspecjalistowit.jarfactory.exception.JarFactoryException;
 import pl.akademiaspecjalistowit.jarfactory.model.JarOrderEntity;
@@ -25,6 +27,7 @@ public class JarOrderServiceImpl implements JarOrderService {
         this.jarOrderRepository = jarOrderRepository;
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
     public UUID addOrder(JarOrderRequestDto jarOrderRequestDto) throws JarException {
         LocalDate deliveryDate = jarOrderRequestDto.getDeliveryDate();
