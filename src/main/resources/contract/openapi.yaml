@@ -5,7 +5,8 @@ info:
   description: API for ordering jars from the JarFactory
 
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:8080/api/v1
+    description: Jar server
 
 tags:
   - name: Orders
@@ -24,46 +25,90 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                deliveryDate:
-                  type: string
-                  format: date
-                  example: "2024-08-01"
-                smallJars:
-                  type: integer
-                  example: 10
-                mediumJars:
-                  type: integer
-                  example: 5
-                largeJars:
-                  type: integer
-                  example: 2
-              required:
-                - deliveryDate
-                - smallJars
-                - mediumJars
-                - largeJars
+              $ref: '#/components/schemas/JarOrderRequestDto'
       responses:
         '201':
           description: Order created successfully
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  orderId:
-                    type: string
-                    example: "123e4567-e89b-12d3-a456-426614174000"
+                $ref: '#/components/schemas/OrderResponse'
         '422':
           description: Business logic error
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  rejectReason:
-                    type: string
-                    example: "zamówienie przekraczajace zdolności produkcyjne"
+                $ref: '#/components/schemas/BusinessErrorResponse'
         '501':
           description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotImplementedError'
+
+    put:
+      tags:
+        - Orders
+      summary: Update the delivery date and contents of an existing jar order
+      operationId: updateJarOrder
+      requestBody:
+        description: Updated order details for jars
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JarOrderRequestDto'
+      responses:
+        '204':
+          description: Order updated successfully, no content returned
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotImplementedError'
+
+components:
+  schemas:
+    JarOrderRequestDto:
+      type: object
+      properties:
+        deliveryDate:
+          type: string
+          format: date
+          example: "2024-08-01"
+        smallJars:
+          type: integer
+          example: 10
+        mediumJars:
+          type: integer
+          example: 5
+        largeJars:
+          type: integer
+          example: 2
+      required:
+        - deliveryDate
+        - smallJars
+        - mediumJars
+        - largeJars
+
+    OrderResponse:
+      type: object
+      properties:
+        orderId:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+
+    BusinessErrorResponse:
+      type: object
+      properties:
+        rejectReason:
+          type: string
+          example: "zamówienie przekraczajace zdolności produkcyjne"
+
+    NotImplementedError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Not Implemented"
