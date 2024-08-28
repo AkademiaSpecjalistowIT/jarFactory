@@ -44,7 +44,7 @@ public class JarOrderServiceImpl implements JarOrderService {
         objectMapper.registerModule(new JavaTimeModule());
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional()
     @Override
     public UUID addOrder(JarOrderRequestDto jarOrderRequestDto) throws JarException {
         LocalDate deliveryDate = jarOrderRequestDto.getDeliveryDate();
