@@ -1,8 +1,8 @@
 package pl.akademiaspecjalistowit.jarfactory.controller;
 
+import com.github.fge.jsonpatch.JsonPatch;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.akademiaspecjalistowit.jarfactory.model.JarOrderRequestDto;
 import pl.akademiaspecjalistowit.jarfactory.service.JarOrderService;
@@ -23,8 +23,8 @@ public class JarFactoryController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PutMapping("/order")
-    public ResponseEntity<String> updateJarOrder(@RequestBody JarOrderRequestDto jarOrderRequestDto) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("NOT_IMPLEMENTED");
+    @PatchMapping("/order/{id}")
+    public void updateJarOrder(@PathVariable("id") UUID orderId, @RequestBody JsonPatch patch) {
+        jarOrderService.updateOrder(orderId, patch);
     }
 }

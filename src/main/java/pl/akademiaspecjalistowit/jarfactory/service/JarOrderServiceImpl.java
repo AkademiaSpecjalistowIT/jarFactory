@@ -1,9 +1,19 @@
 package pl.akademiaspecjalistowit.jarfactory.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import pl.akademiaspecjalistowit.jarfactory.configuration.ApiProperties;
 import pl.akademiaspecjalistowit.jarfactory.exception.JarFactoryException;
+import pl.akademiaspecjalistowit.jarfactory.exception.NoExistOrderException;
+import pl.akademiaspecjalistowit.jarfactory.mapper.JarMapper;
+import pl.akademiaspecjalistowit.jarfactory.model.JarOrderEditDto;
 import pl.akademiaspecjalistowit.jarfactory.model.JarOrderEntity;
 import pl.akademiaspecjalistowit.jarfactory.model.JarOrderRequestDto;
 import pl.akademiaspecjalistowit.jarfactory.repository.JarOrderRepository;
@@ -15,16 +25,26 @@ import java.util.UUID;
 import java.util.jar.JarException;
 import java.util.stream.Collectors;
 
+//@AllArgsConstructor
 @Service
 public class JarOrderServiceImpl implements JarOrderService {
     private final JarOrderRepository jarOrderRepository;
-    @Autowired
-    private ApiProperties apiProperties;
 
-    public JarOrderServiceImpl(JarOrderRepository jarOrderRepository) {
+    private final ApiProperties apiProperties;
+
+    private final ObjectMapper objectMapper;
+
+    private final JarMapper jarMapper;
+
+    public JarOrderServiceImpl(JarOrderRepository jarOrderRepository, ApiProperties apiProperties, ObjectMapper objectMapper, JarMapper jarMapper) {
         this.jarOrderRepository = jarOrderRepository;
+        this.apiProperties = apiProperties;
+        this.objectMapper = objectMapper;
+        this.jarMapper = jarMapper;
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
+    @Transactional()
     @Override
     public UUID addOrder(JarOrderRequestDto jarOrderRequestDto) throws JarException {
         LocalDate deliveryDate = jarOrderRequestDto.getDeliveryDate();
@@ -35,6 +55,34 @@ public class JarOrderServiceImpl implements JarOrderService {
         JarOrderEntity jarOrder = new JarOrderEntity(deliveryDate, smallJars, mediumJars, largeJars);
         jarOrderRepository.save(jarOrder);
         return jarOrder.getTechnicalId();
+    }
+
+    @Override
+    @Transactional
+    public void updateOrder(UUID orderId, JsonPatch patch) {
+
+        JarOrderEntity entity = jarOrderRepository.findByTechnicalId(orderId).orElseThrow(() -> new NoExistOrderException("There is not order with ID: " + orderId));
+
+        JarOrderEditDto jarOrderEditDto = jarMapper.fromEntityToJarOrderEdit(entity);
+        try {
+            JsonNode jsonNode = objectMapper.convertValue(jarOrderEditDto, JsonNode.class);
+            JsonNode patched = patch.apply(jsonNode);
+            JarOrderEditDto jarOrderEdited = objectMapper.treeToValue(patched, JarOrderEditDto.class);
+
+            updateJarOrderEntity(jarOrderEdited, entity);
+            checkMaxCapabilities(entity.getDeliveryDate(), 0, 0, 0);
+
+        } catch (JsonPatchException | JsonProcessingException | JarException e) {
+            throw new JarFactoryException("Error update for order");
+        }
+    }
+
+    private void updateJarOrderEntity(JarOrderEditDto jarOrderEdited, JarOrderEntity entity) throws JarException {
+        entity.setTechnicalId(jarOrderEdited.getTechnicalId());
+        entity.setDeliveryDate(jarOrderEdited.getDeliveryDate());
+        entity.setSmallJars(jarOrderEdited.getSmallJars());
+        entity.setMediumJars(jarOrderEdited.getMediumJars());
+        entity.setLargeJars(jarOrderEdited.getLargeJars());
     }
 
     private void checkMaxCapabilities(LocalDate deliveryDate, Integer smallJars, Integer mediumJars, Integer largeJars) throws JarException {
