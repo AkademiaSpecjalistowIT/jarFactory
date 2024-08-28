@@ -1,5 +1,6 @@
 package pl.akademiaspecjalistowit.jarfactory.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opentable.db.postgres.embedded.EmbeddedPostgres;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.testcontainers.utility.DockerImageName;
+import pl.akademiaspecjalistowit.jarfactory.mapper.JarMapper;
 import pl.akademiaspecjalistowit.jarfactory.model.JarOrderEntity;
 import pl.akademiaspecjalistowit.jarfactory.repository.JarOrderRepository;
 import pl.akademiaspecjalistowit.jarfactory.service.JarOrderService;
@@ -30,14 +32,17 @@ public class EmbeddedPostgresConfiguration {
 
         return embeddedPostgres.getPostgresDatabase();
     }
+
     @Bean
-    public JarOrderService jarOrderService(JarOrderRepository jarOrderRepository) {
-        return new JarOrderServiceImpl(jarOrderRepository);
+    public JarOrderService jarOrderService(JarOrderRepository jarOrderRepository, ApiProperties apiProperties) {
+        return new JarOrderServiceImpl(jarOrderRepository, apiProperties, new ObjectMapper(), new JarMapper());
     }
+
     @Bean
     public ApiProperties apiProperties() {
         return new ApiProperties();
     }
+
     public static class EmbeddedPostgresExtension implements AfterAllCallback {
         @Override
         public void afterAll(ExtensionContext context) throws Exception {
