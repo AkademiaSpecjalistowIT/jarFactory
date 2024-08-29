@@ -6,10 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import pl.akademiaspecjalistowit.jarfactory.configuration.ApiProperties;
 import pl.akademiaspecjalistowit.jarfactory.exception.JarFactoryException;
 import pl.akademiaspecjalistowit.jarfactory.exception.NoExistOrderException;
 import pl.akademiaspecjalistowit.jarfactory.mapper.JarMapper;
@@ -25,20 +24,22 @@ import java.util.UUID;
 import java.util.jar.JarException;
 import java.util.stream.Collectors;
 
-//@AllArgsConstructor
 @Service
 public class JarOrderServiceImpl implements JarOrderService {
     private final JarOrderRepository jarOrderRepository;
 
-    private final ApiProperties apiProperties;
-
     private final ObjectMapper objectMapper;
 
     private final JarMapper jarMapper;
+    @Value("${parametrs.limits.L_jar}")
+    private Integer maxFactoryCapacityLargeJars;
+    @Value("${parametrs.limits.M_jar}")
+    private Integer maxFactoryCapacityMediumJars;
+    @Value("${parametrs.limits.S_jar}")
+    private Integer maxFactoryCapacitySmallJars;
 
-    public JarOrderServiceImpl(JarOrderRepository jarOrderRepository, ApiProperties apiProperties, ObjectMapper objectMapper, JarMapper jarMapper) {
+    public JarOrderServiceImpl(JarOrderRepository jarOrderRepository, ObjectMapper objectMapper, JarMapper jarMapper) {
         this.jarOrderRepository = jarOrderRepository;
-        this.apiProperties = apiProperties;
         this.objectMapper = objectMapper;
         this.jarMapper = jarMapper;
         objectMapper.registerModule(new JavaTimeModule());
@@ -94,9 +95,9 @@ public class JarOrderServiceImpl implements JarOrderService {
         Integer existingMediumJars = listOfExistingQuantitiesForThisDate.getOrDefault("mediumJars", 0);
         Integer existingLargeJars = listOfExistingQuantitiesForThisDate.getOrDefault("largeJars", 0);
 
-        Integer productionСapacitySmallJars = apiProperties.getS_jar() - smallJars - existingSmallJars;
-        Integer productionСapacityMediumJars = apiProperties.getM_jar() - mediumJars - existingMediumJars;
-        Integer productionСapacityLargeJars = apiProperties.getL_jar() - largeJars - existingLargeJars;
+        Integer productionСapacitySmallJars = maxFactoryCapacitySmallJars - smallJars - existingSmallJars;
+        Integer productionСapacityMediumJars = maxFactoryCapacityMediumJars - mediumJars - existingMediumJars;
+        Integer productionСapacityLargeJars = maxFactoryCapacityLargeJars - largeJars - existingLargeJars;
 
         StringBuilder textError = generateErrorMessage(productionСapacitySmallJars, productionСapacityMediumJars, productionСapacityLargeJars);
         if (textError.length() > 0) {
