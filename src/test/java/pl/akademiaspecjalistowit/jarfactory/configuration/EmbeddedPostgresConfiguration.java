@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.testcontainers.utility.DockerImageName;
 import pl.akademiaspecjalistowit.jarfactory.mapper.JarMapper;
-import pl.akademiaspecjalistowit.jarfactory.model.JarOrderEntity;
+import pl.akademiaspecjalistowit.jarfactory.entity.JarOrderEntity;
 import pl.akademiaspecjalistowit.jarfactory.repository.JarOrderRepository;
 import pl.akademiaspecjalistowit.jarfactory.service.JarOrderService;
 import pl.akademiaspecjalistowit.jarfactory.service.JarOrderServiceImpl;
