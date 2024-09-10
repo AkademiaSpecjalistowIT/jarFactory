@@ -1,4 +1,4 @@
-package pl.akademiaspecjalistowit.jarfactory.controller;
+package pl.akademiaspecjalistowit.jarfactory.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
