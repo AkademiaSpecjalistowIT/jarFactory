@@ -117,6 +117,41 @@ components:
         - mediumJars
         - largeJars
 
+    JarOrderEditDto:
+      type: object
+      properties:
+        technicalId:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+          description: "Unique technical ID for the order"
+        deliveryDate:
+          type: string
+          format: date
+          example: "2024-08-01"
+          description: "Updated delivery date"
+        smallJars:
+          type: integer
+          minimum: 0
+          example: 10
+          description: "Updated number of small jars"
+        mediumJars:
+          type: integer
+          minimum: 0
+          example: 5
+          description: "Updated number of medium jars"
+        largeJars:
+          type: integer
+          minimum: 0
+          example: 2
+          description: "Updated number of large jars"
+      required:
+        - technicalId
+        - deliveryDate
+        - smallJars
+        - mediumJars
+        - largeJars
+
     OrderResponse:
       type: object
       properties:
