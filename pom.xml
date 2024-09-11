@@ -74,6 +74,21 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.15.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.8.0</version> <!-- Upewnij się, że używasz najnowszej wersji -->
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>openapi-generator-maven-plugin</artifactId>
+            <version>7.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.1</version> <!-- Проверьте актуальную версию -->
+        </dependency>
     </dependencies>
 
     <build>
@@ -89,6 +104,36 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.1.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/contract/openapi.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <apiPackage>pl.akademiaspecjalistowit.api</apiPackage>
+                            <modelPackage>pl.akademiaspecjalistowit.model</modelPackage>
+                            <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
+                            <configOptions>
+                                <additionalModelTypeAnnotations>
+                                    @lombok.Builder
+<!--                                    @lombok.AllArgsConstructor-->
+<!--                                    @lombok.NoArgsConstructor-->
+<!--                                    @lombok.Getter-->
+                                </additionalModelTypeAnnotations>
+                                <useJakartaEe>true</useJakartaEe>
+                                <interfaceOnly>true</interfaceOnly>
+                                <delegatePattern>true</delegatePattern>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -7,22 +7,20 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.akademiaspecjalistowit.jarfactory.configuration.ApiProperties;
 import pl.akademiaspecjalistowit.jarfactory.exception.JarFactoryException;
 import pl.akademiaspecjalistowit.jarfactory.exception.NoExistOrderException;
 import pl.akademiaspecjalistowit.jarfactory.mapper.JarMapper;
 import pl.akademiaspecjalistowit.jarfactory.model.JarOrderEditDto;
-import pl.akademiaspecjalistowit.jarfactory.model.JarOrderEntity;
-import pl.akademiaspecjalistowit.jarfactory.model.JarOrderRequestDto;
+import pl.akademiaspecjalistowit.jarfactory.entity.JarOrderEntity;
+import pl.akademiaspecjalistowit.model.JarOrderRequestDto;
 import pl.akademiaspecjalistowit.jarfactory.repository.JarOrderRepository;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.jar.JarException;
 import java.util.stream.Collectors;
 
 //@AllArgsConstructor
@@ -46,7 +44,7 @@ public class JarOrderServiceImpl implements JarOrderService {
 
     @Transactional()
     @Override
-    public UUID addOrder(JarOrderRequestDto jarOrderRequestDto) throws JarException {
+    public UUID addOrder(JarOrderRequestDto jarOrderRequestDto) {
         LocalDate deliveryDate = jarOrderRequestDto.getDeliveryDate();
         Integer smallJars = jarOrderRequestDto.getSmallJars();
         Integer mediumJars = jarOrderRequestDto.getMediumJars();
@@ -72,12 +70,12 @@ public class JarOrderServiceImpl implements JarOrderService {
             updateJarOrderEntity(jarOrderEdited, entity);
             checkMaxCapabilities(entity.getDeliveryDate(), 0, 0, 0);
 
-        } catch (JsonPatchException | JsonProcessingException | JarException e) {
+        } catch (JsonPatchException | JsonProcessingException e) {
             throw new JarFactoryException("Error update for order");
         }
     }
 
-    private void updateJarOrderEntity(JarOrderEditDto jarOrderEdited, JarOrderEntity entity) throws JarException {
+    private void updateJarOrderEntity(JarOrderEditDto jarOrderEdited, JarOrderEntity entity){
         entity.setTechnicalId(jarOrderEdited.getTechnicalId());
         entity.setDeliveryDate(jarOrderEdited.getDeliveryDate());
         entity.setSmallJars(jarOrderEdited.getSmallJars());
@@ -85,7 +83,7 @@ public class JarOrderServiceImpl implements JarOrderService {
         entity.setLargeJars(jarOrderEdited.getLargeJars());
     }
 
-    private void checkMaxCapabilities(LocalDate deliveryDate, Integer smallJars, Integer mediumJars, Integer largeJars) throws JarException {
+    private void checkMaxCapabilities(LocalDate deliveryDate, Integer smallJars, Integer mediumJars, Integer largeJars) {
         List<JarOrderEntity> listOfRequiredQuantities = jarOrderRepository.getByDeliveryDate(deliveryDate);
 
         Map<String, Integer> listOfExistingQuantitiesForThisDate = getTotalAmountForDate(listOfRequiredQuantities);
