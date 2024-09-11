@@ -9,11 +9,11 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.akademiaspecjalistowit.jarfactory.configuration.ApiProperties;
+import pl.akademiaspecjalistowit.jarfactory.entity.JarOrderEntity;
 import pl.akademiaspecjalistowit.jarfactory.exception.JarFactoryException;
 import pl.akademiaspecjalistowit.jarfactory.exception.NoExistOrderException;
 import pl.akademiaspecjalistowit.jarfactory.mapper.JarMapper;
 import pl.akademiaspecjalistowit.jarfactory.model.JarOrderEditDto;
-import pl.akademiaspecjalistowit.jarfactory.entity.JarOrderEntity;
 import pl.akademiaspecjalistowit.jarfactory.model.JarOrderRequestDto;
 import pl.akademiaspecjalistowit.jarfactory.repository.JarOrderRepository;
 
@@ -26,11 +26,8 @@ import java.util.stream.Collectors;
 @Service
 public class JarOrderServiceImpl implements JarOrderService {
     private final JarOrderRepository jarOrderRepository;
-
     private final ApiProperties apiProperties;
-
     private final ObjectMapper objectMapper;
-
     private final JarMapper jarMapper;
 
     public JarOrderServiceImpl(JarOrderRepository jarOrderRepository, ApiProperties apiProperties, ObjectMapper objectMapper, JarMapper jarMapper) {
@@ -41,7 +38,6 @@ public class JarOrderServiceImpl implements JarOrderService {
         objectMapper.registerModule(new JavaTimeModule());
     }
 
-    @Transactional()
     @Override
     public UUID addOrder(JarOrderRequestDto jarOrderRequestDto) throws JarFactoryException {
         LocalDate deliveryDate = jarOrderRequestDto.getDeliveryDate();
