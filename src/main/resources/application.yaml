@@ -1,7 +1,12 @@
 server:
   port: 8081
 
+logging:
+  level:
+    root: DEBUG
+
 spring:
+
   application:
     name: jarFactory
 
