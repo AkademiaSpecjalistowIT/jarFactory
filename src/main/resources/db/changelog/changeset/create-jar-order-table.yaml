@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-jar-orders #текстовый идентификатор (Обязателен)
+      author: Alena Iadkouskaya # автор (Обязателен)
+      changes:
+        - createTable: # создаем новую таблицу
+            ifNotExists: true
+            tableName: jar_orders
+            columns: # объявления колонок
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: technical_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: delivery_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: small_jars
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: medium_jars
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: large_jars
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: INTEGER
+                  constraints:
+                    nullable: false

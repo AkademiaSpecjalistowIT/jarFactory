@@ -16,7 +16,7 @@ import pl.akademiaspecjalistowit.jarfactory.configuration.ApiProperties;
 import pl.akademiaspecjalistowit.jarfactory.configuration.EmbeddedPostgresConfiguration;
 import pl.akademiaspecjalistowit.jarfactory.exception.JarFactoryException;
 import pl.akademiaspecjalistowit.jarfactory.exception.NoExistOrderException;
-import pl.akademiaspecjalistowit.jarfactory.model.JarOrderEntity;
+import pl.akademiaspecjalistowit.jarfactory.entity.JarOrderEntity;
 import pl.akademiaspecjalistowit.jarfactory.model.JarOrderRequestDto;
 import pl.akademiaspecjalistowit.jarfactory.repository.JarOrderRepository;
 

@@ -2,7 +2,7 @@ package pl.akademiaspecjalistowit.jarfactory.mapper;
 
 import org.springframework.stereotype.Component;
 import pl.akademiaspecjalistowit.jarfactory.model.JarOrderEditDto;
-import pl.akademiaspecjalistowit.jarfactory.model.JarOrderEntity;
+import pl.akademiaspecjalistowit.jarfactory.entity.JarOrderEntity;
 import pl.akademiaspecjalistowit.jarfactory.model.JarOrderRequestDto;
 
 @Component

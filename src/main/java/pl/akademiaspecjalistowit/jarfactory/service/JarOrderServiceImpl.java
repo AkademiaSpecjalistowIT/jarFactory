@@ -7,14 +7,13 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.akademiaspecjalistowit.jarfactory.configuration.ApiProperties;
 import pl.akademiaspecjalistowit.jarfactory.exception.JarFactoryException;
 import pl.akademiaspecjalistowit.jarfactory.exception.NoExistOrderException;
 import pl.akademiaspecjalistowit.jarfactory.mapper.JarMapper;
 import pl.akademiaspecjalistowit.jarfactory.model.JarOrderEditDto;
-import pl.akademiaspecjalistowit.jarfactory.model.JarOrderEntity;
+import pl.akademiaspecjalistowit.jarfactory.entity.JarOrderEntity;
 import pl.akademiaspecjalistowit.jarfactory.model.JarOrderRequestDto;
 import pl.akademiaspecjalistowit.jarfactory.repository.JarOrderRepository;
 
