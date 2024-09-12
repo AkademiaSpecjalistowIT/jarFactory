@@ -21,16 +21,16 @@ public class JarOrderEntity {
 
     private UUID technicalId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "delivery_date")
     private LocalDate deliveryDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "small_jars")
     private Integer smallJars;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "medium_jars")
     private Integer mediumJars;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "large_jars")
     private Integer largeJars;
 
     @Version

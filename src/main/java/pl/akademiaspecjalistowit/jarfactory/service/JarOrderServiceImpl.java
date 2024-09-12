@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.jar.JarException;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +39,7 @@ public class JarOrderServiceImpl implements JarOrderService {
         objectMapper.registerModule(new JavaTimeModule());
     }
 
+    @Transactional()
     @Override
     public UUID addOrder(JarOrderRequestDto jarOrderRequestDto) throws JarFactoryException {
         LocalDate deliveryDate = jarOrderRequestDto.getDeliveryDate();
