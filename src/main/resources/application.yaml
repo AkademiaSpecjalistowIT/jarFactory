@@ -1,11 +1,15 @@
-#server:
-#  port: 8100
+server:
+  port: 8081
+
+logging:
+  level:
+    root: DEBUG
+
 spring:
   application:
     name: jarFactory
 
   datasource:
-#    url: jdbc:postgresql://localhost:5432/jar_factory
     url: jdbc:postgresql://localhost:5439/jar_factory
     username: postgres
     password: admin
@@ -26,5 +30,3 @@ max-factory-capacity:
   L_jar: 35 000
   M_jar: 35 000
   S_jar: 35 000
-
-

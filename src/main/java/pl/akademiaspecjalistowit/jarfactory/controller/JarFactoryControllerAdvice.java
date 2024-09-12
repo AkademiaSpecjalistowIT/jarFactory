@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import pl.akademiaspecjalistowit.jarfactory.exception.JarFactoryException;
+import pl.akademiaspecjalistowit.jarfactory.model.ErrorCode;
+import pl.akademiaspecjalistowit.jarfactory.model.ErrorResponse;
 
 @ControllerAdvice
 public class JarFactoryControllerAdvice {
