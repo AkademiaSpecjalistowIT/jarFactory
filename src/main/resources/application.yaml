@@ -14,8 +14,8 @@ spring:
     enabled: true
     change-log: classpath:/db/changelog/db.changelog-master.yaml
   jpa:
-#    hibernate:
-#      ddl-auto: update
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
