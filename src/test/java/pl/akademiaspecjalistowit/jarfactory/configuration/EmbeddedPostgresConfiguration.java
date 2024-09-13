@@ -34,8 +34,8 @@ public class EmbeddedPostgresConfiguration {
     }
 
     @Bean
-    public JarOrderService jarOrderService(JarOrderRepository jarOrderRepository, ApiProperties apiProperties) {
-        return new JarOrderServiceImpl(jarOrderRepository, apiProperties, new ObjectMapper(), new JarMapper());
+    public JarOrderService jarOrderService(JarOrderRepository jarOrderRepository, ApiProperties apiProperties, ObjectMapper objectMapper) {
+        return new JarOrderServiceImpl(jarOrderRepository, apiProperties, new JarMapper(), objectMapper);
     }
 
     @Bean

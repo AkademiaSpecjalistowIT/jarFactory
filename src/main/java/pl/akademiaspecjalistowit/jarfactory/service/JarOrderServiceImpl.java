@@ -31,12 +31,11 @@ public class JarOrderServiceImpl implements JarOrderService {
     private final ObjectMapper objectMapper;
     private final JarMapper jarMapper;
 
-    public JarOrderServiceImpl(JarOrderRepository jarOrderRepository, ApiProperties apiProperties, ObjectMapper objectMapper, JarMapper jarMapper) {
+    public JarOrderServiceImpl(JarOrderRepository jarOrderRepository, ApiProperties apiProperties, JarMapper jarMapper, ObjectMapper objectMapper) {
         this.jarOrderRepository = jarOrderRepository;
         this.apiProperties = apiProperties;
-        this.objectMapper = objectMapper;
         this.jarMapper = jarMapper;
-        objectMapper.registerModule(new JavaTimeModule());
+        this.objectMapper = objectMapper;
     }
 
     @Transactional()
