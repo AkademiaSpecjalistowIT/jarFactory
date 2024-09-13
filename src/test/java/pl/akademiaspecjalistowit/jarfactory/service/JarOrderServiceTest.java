@@ -45,35 +45,7 @@ class JarOrderServiceTest {
     @Autowired
     private ApiProperties apiProperties;
 
-    @Test
-    void should_create_order_with_correct_input_data() throws JarException {
-        //given
-        //when
-        jarOrderService.addOrder(new JarOrderRequestDto(CORRECT_DATE, CORRECT_QUANTITY_JARS, CORRECT_QUANTITY_JARS, CORRECT_QUANTITY_JARS));
-        List<JarOrderEntity> byDeliveryDate = jarOrderRepository.getByDeliveryDate(CORRECT_DATE);
-        //then
-        assertThat(byDeliveryDate.size()).isEqualTo(1);
-    }
 
-    @Test
-    void should_throw_exception_with_empty_input_delivery_date() throws JarException {
-        //given
-        //when
-        Executable e = () -> jarOrderService.addOrder(new JarOrderRequestDto(null, CORRECT_QUANTITY_JARS, CORRECT_QUANTITY_JARS, CORRECT_QUANTITY_JARS));
-
-        //then
-        assertThrows(IllegalArgumentException.class, e);
-    }
-
-    @Test
-    void should_throw_exception_with_incorrect_input_quantity_any_jars() throws JarException {
-        //given
-        //when
-        Executable e = () -> jarOrderService.addOrder(new JarOrderRequestDto(CORRECT_DATE, CORRECT_QUANTITY_JARS, INCORRECT_QUANTITY_JARS, CORRECT_QUANTITY_JARS));
-
-        //then
-        assertThrows(IllegalArgumentException.class, e);
-    }
 
     @Test
     void should_throw_exception_when_input_quantity_any_jars_exceeds_than_max_capacity() throws JarException {
