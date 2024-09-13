@@ -1,12 +1,12 @@
 databaseChangeLog:
   - changeSet:
-      id: create-jar-orders #текстовый идентификатор (Обязателен)
-      author: Alena Iadkouskaya # автор (Обязателен)
+      id: create-jar-orders
+      author: Alena Iadkouskaya
       changes:
-        - createTable: # создаем новую таблицу
+        - createTable:
             ifNotExists: true
             tableName: jar_orders
-            columns: # объявления колонок
+            columns:
               - column:
                   name: id
                   type: bigint
