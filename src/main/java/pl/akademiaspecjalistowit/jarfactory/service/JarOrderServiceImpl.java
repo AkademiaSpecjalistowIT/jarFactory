@@ -73,11 +73,7 @@ public class JarOrderServiceImpl implements JarOrderService {
     }
 
     private void updateJarOrderEntity(JarOrderEditDto jarOrderEdited, JarOrderEntity entity) throws JarFactoryException {
-        entity.setTechnicalId(jarOrderEdited.getTechnicalId());
-        entity.setDeliveryDate(jarOrderEdited.getDeliveryDate());
-        entity.setSmallJars(jarOrderEdited.getSmallJars());
-        entity.setMediumJars(jarOrderEdited.getMediumJars());
-        entity.setLargeJars(jarOrderEdited.getLargeJars());
+        entity.updateAllFields(jarOrderEdited);
     }
 
     private void checkMaxCapabilities(LocalDate deliveryDate, Integer smallJars, Integer mediumJars, Integer largeJars) throws JarFactoryException {

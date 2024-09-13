@@ -25,7 +25,7 @@ public class JarsController implements ApiApi {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PatchMapping("/order/{id}")
+    @PatchMapping("/api/v1/jars/order/{id}")
     public void updateJarOrder(@PathVariable("id") UUID orderId, @RequestBody JsonPatch patch) {
         jarOrderService.updateOrder(orderId, patch);
     }
