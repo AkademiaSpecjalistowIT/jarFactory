@@ -42,6 +42,10 @@ public class EmbeddedPostgresConfiguration {
     public ApiProperties apiProperties() {
         return new ApiProperties();
     }
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
 
     public static class EmbeddedPostgresExtension implements AfterAllCallback {
         @Override
