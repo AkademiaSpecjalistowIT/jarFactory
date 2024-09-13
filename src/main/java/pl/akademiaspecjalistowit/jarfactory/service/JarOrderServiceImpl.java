@@ -38,7 +38,7 @@ public class JarOrderServiceImpl implements JarOrderService {
         objectMapper.registerModule(new JavaTimeModule());
     }
 
-    @Transactional()
+
     @Override
     public UUID addOrder(JarOrderRequestDto jarOrderRequestDto) throws JarFactoryException {
         LocalDate deliveryDate = jarOrderRequestDto.getDeliveryDate();
