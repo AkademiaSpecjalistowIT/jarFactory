@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import pl.akademiaspecjalistowit.jarfactory.model.JarOrderEditDto;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -65,35 +66,17 @@ public class JarOrderEntity {
         }
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public void updateAllFields(JarOrderEditDto jarOrderEdited) {
+        LocalDate deliveryDate = jarOrderEdited.getDeliveryDate();
+        Integer smallJars = jarOrderEdited.getSmallJars();
+        Integer mediumJars = jarOrderEdited.getMediumJars();
+        Integer largeJars = jarOrderEdited.getLargeJars();
 
-    public void setTechnicalId(UUID technicalId) {
-        this.technicalId = technicalId;
-    }
-
-    public void setDeliveryDate(LocalDate deliveryDate) {
-        validateDeliveryDate(deliveryDate);
+        validateEntryParam(deliveryDate, smallJars, mediumJars, largeJars);
         this.deliveryDate = deliveryDate;
-    }
-
-    public void setSmallJars(Integer smallJars) {
-        validateQuantityJars(smallJars, "Small");
         this.smallJars = smallJars;
-    }
-
-    public void setMediumJars(Integer mediumJars) {
-        validateQuantityJars(mediumJars, "Medium");
         this.mediumJars = mediumJars;
-    }
-
-    public void setLargeJars(Integer largeJars) {
-        validateQuantityJars(largeJars, "Large");
         this.largeJars = largeJars;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
+        this.technicalId = jarOrderEdited.getTechnicalId();
     }
 }
