@@ -21,7 +21,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.jar.JarException;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,11 +30,12 @@ public class JarOrderServiceImpl implements JarOrderService {
     private final ObjectMapper objectMapper;
     private final JarMapper jarMapper;
 
-    public JarOrderServiceImpl(JarOrderRepository jarOrderRepository, ApiProperties apiProperties, JarMapper jarMapper, ObjectMapper objectMapper) {
+    public JarOrderServiceImpl(JarOrderRepository jarOrderRepository, ApiProperties apiProperties, ObjectMapper objectMapper, JarMapper jarMapper) {
         this.jarOrderRepository = jarOrderRepository;
         this.apiProperties = apiProperties;
-        this.jarMapper = jarMapper;
         this.objectMapper = objectMapper;
+        this.jarMapper = jarMapper;
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
     @Transactional()

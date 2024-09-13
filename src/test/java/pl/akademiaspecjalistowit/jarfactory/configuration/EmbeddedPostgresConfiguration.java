@@ -34,13 +34,17 @@ public class EmbeddedPostgresConfiguration {
     }
 
     @Bean
-    public JarOrderService jarOrderService(JarOrderRepository jarOrderRepository, ApiProperties apiProperties, ObjectMapper objectMapper) {
-        return new JarOrderServiceImpl(jarOrderRepository, apiProperties, new JarMapper(), objectMapper);
+    public JarOrderService jarOrderService(JarOrderRepository jarOrderRepository, ApiProperties apiProperties) {
+        return new JarOrderServiceImpl(jarOrderRepository, apiProperties, new ObjectMapper(), new JarMapper());
     }
 
     @Bean
     public ApiProperties apiProperties() {
         return new ApiProperties();
+    }
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 
     public static class EmbeddedPostgresExtension implements AfterAllCallback {

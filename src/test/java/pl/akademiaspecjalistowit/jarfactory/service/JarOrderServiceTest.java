@@ -44,11 +44,12 @@ class JarOrderServiceTest {
     private JarOrderRepository jarOrderRepository;
     @Autowired
     private ApiProperties apiProperties;
-
+    @Autowired
+    private ObjectMapper objectMapper;
 
 
     @Test
-    void should_throw_exception_when_input_quantity_any_jars_exceeds_than_max_capacity() throws JarException {
+    void should_throw_exception_when_input_quantity_any_jars_exceeds_than_max_capacity() {
         //given
         //when
         Executable e = () -> jarOrderService.addOrder(new JarOrderRequestDto(CORRECT_DATE, apiProperties.getS_jar() + 1, CORRECT_QUANTITY_JARS, CORRECT_QUANTITY_JARS));
@@ -57,7 +58,7 @@ class JarOrderServiceTest {
     }
 
     @Test
-    void should_throw_exception_when_total_quantity_exceeds_max_capacity_for_day() throws JarException {
+    void should_throw_exception_when_total_quantity_exceeds_max_capacity_for_day() {
         //given
         jarOrderService.addOrder(new JarOrderRequestDto(CORRECT_DATE, apiProperties.getS_jar(), CORRECT_QUANTITY_JARS, CORRECT_QUANTITY_JARS));
         //when
@@ -137,7 +138,6 @@ class JarOrderServiceTest {
         String patchString = String.format("[{\"op\": \"replace\", \"path\": \"/smallJars\", \"value\": %d}]", changedSmallJars);
         JsonNode jsonPatchNode = objectMapper.readTree(patchString);
         JsonPatch jsonPatch = JsonPatch.fromJson(jsonPatchNode);
-        System.out.println(jarOrderRepository.findAll().toArray().toString());
 
         //when
         Executable e = () -> jarOrderService.updateOrder(uuidNewOrder, jsonPatch);
